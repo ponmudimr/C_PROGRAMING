@@ -90,7 +90,7 @@ int main() {
     printf("\n=========== ELECTRICAL CONSTANTS ============\n\n");
 
     printf("Vacuum Permittivity        = %.15e\n", VACUUM_PERMITTIVITY);
-    printf("Vacuum Permeability        = %.15e\n", VACUUM_PERMEABILITY);
+    printf("Vacuum Permeability         = %.15e\n", VACUUM_PERMEABILITY);
     printf("Coulomb Constant           = %.10e\n", COULOMB_CONSTANT);
     printf("Faraday Constant           = %.10f\n", FARADAY);
 
