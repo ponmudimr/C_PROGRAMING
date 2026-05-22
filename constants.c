@@ -124,7 +124,7 @@ int main() {
 
     printf("\n=========== MATERIAL CONSTANTS ==============\n\n");
 
-    printf("Copper Resistivity         = %.15e\n", COPPER_RESISTIVITY);
+    printf("Copper Resistivity          = %.15e\n", COPPER_RESISTIVITY);
     printf("Silicon Density            = %d kg/m^3\n", SILICON_DENSITY);
 
     return 0;
