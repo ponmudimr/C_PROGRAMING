@@ -56,7 +56,7 @@ int main() {
 
         printf("\n========= VALPARAI E-PASS SYSTEM =========\n");
 
-        printf("1. Apply E -Pass\n");
+        printf("1. Apply E-Pass\n");
         printf("2. Show Remaining Slots\n");
         printf("3. Exit\n");
 
