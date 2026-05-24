@@ -23,7 +23,7 @@ void generatePass(struct EPass user) {
 
     printf("\n=====================================\n");
     printf("         VALPARAI E-PASS\n");
-    printf("=====================================\n");
+    printf("============= ========================\n");
 
     printf("Pass ID           : VP%d\n", user.passID);
 
