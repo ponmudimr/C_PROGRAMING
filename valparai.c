@@ -149,7 +149,7 @@ int main() {
 
         else if(choice == 3) {
 
-            printf("\nThank You!\n");
+            printf("\nThank  You!\n");
 
             break;
         }
