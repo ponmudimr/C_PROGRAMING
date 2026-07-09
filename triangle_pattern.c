@@ -27,11 +27,14 @@ int main() {
         printf("\n");
     }
 
-    // Pattern 3: Number triangle
-    printf("\nNumber triangle:\n");
-    for (int i = 1; i <= rows; i++) {
-        for (int j = 1; j <= i; j++) {
-            printf("%d ", j);
+    // Pattern 3: Inverted pyramid (centered, upside down)
+    printf("\nInverted pyramid:\n");
+    for (int i = rows; i >= 1; i--) {
+        for (int s = 1; s <= rows - i; s++) {
+            printf(" ");
+        }
+        for (int j = 1; j <= 2 * i - 1; j++) {
+            printf("*");
         }
         printf("\n");
     }
