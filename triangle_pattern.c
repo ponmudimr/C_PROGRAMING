@@ -4,7 +4,10 @@ int main() {
     int rows;
 
     printf("Enter the number of rows: ");
-    scanf("%d", &rows);
+    if (scanf("%d", &rows) != 1 || rows <= 0) {
+        printf("Invalid input! Please enter a positive number.\n");
+        return 1;
+    }
 
     // Pattern 1: Right-angled triangle of stars
     printf("\nRight-angled triangle:\n");
