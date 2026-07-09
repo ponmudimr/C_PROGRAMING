@@ -51,5 +51,18 @@ int main() {
         printf("\n");
     }
 
+    // Pattern 5: Hollow right-angled triangle
+    printf("\nHollow triangle:\n");
+    for (int i = 1; i <= rows; i++) {
+        for (int j = 1; j <= i; j++) {
+            if (j == 1 || j == i || i == rows) {
+                printf("* ");
+            } else {
+                printf("  ");
+            }
+        }
+        printf("\n");
+    }
+
     return 0;
 }
