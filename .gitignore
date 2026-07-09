@@ -1,0 +1,9 @@
+# Compiled binaries
+*.out
+*.o
+constants
+day1
+trail
+valparai
+hostel_booking
+triangle_pattern
