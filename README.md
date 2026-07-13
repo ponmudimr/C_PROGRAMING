@@ -12,6 +12,7 @@ A collection of C programs written while learning and practicing C.
 | `valparai.c` | Valparai e-pass management system |
 | `hostel_booking.c` | Hostel 2 room booking system for 1st year students |
 | `triangle_pattern.c` | Star triangle patterns (right-angled, pyramid, inverted, hollow, diamond) |
+| `calculator.c` | Interactive calculator (+, -, *, /, %) with input validation |
 
 ## How to compile and run
 
