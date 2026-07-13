@@ -6,7 +6,11 @@ int main()
     char op;
 
     printf("Enter expression (e.g. 5 + 3): ");
-    scanf("%f %c %f", &a, &op, &b);
+    if (scanf("%f %c %f", &a, &op, &b) != 3)
+    {
+        printf("Invalid input\n");
+        return 1;
+    }
 
     switch (op)
     {
@@ -18,6 +22,12 @@ int main()
             break;
         case '*':
             printf("%.2f * %.2f = %.2f\n", a, b, a * b);
+            break;
+        case '%':
+            if ((int)b == 0)
+                printf("Error: modulus by zero\n");
+            else
+                printf("%d %% %d = %d\n", (int)a, (int)b, (int)a % (int)b);
             break;
         case '/':
             if (b == 0)
