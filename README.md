@@ -1,6 +1,6 @@
 # C Programming
 
-A collection of C programs written while learning and practicing C.
+A collection of C programs written w.   hile learning and practicing C.
 
 ## Programs
 
