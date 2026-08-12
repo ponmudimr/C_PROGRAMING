@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "random_generator.h"
 
 void init_random(void) {
@@ -96,9 +97,69 @@ void print_matrix(int rows, int cols, const int *matrix) {
     }
 }
 
+void simulate_guessing_game(int min, int max) {
+    int target = get_random_int(min, max);
+    printf("Simulating Number Guessing Game (Target between %d and %d)...\n", min, max);
+    
+    int low = min, high = max;
+    int attempts = 0;
+    int guess;
+
+    do {
+        attempts++;
+        guess = (low + high) / 2;
+        printf("  Attempt %d: Guessed %d -> ", attempts, guess);
+        if (guess < target) {
+            printf("Too Low!\n");
+            low = guess + 1;
+        } else if (guess > target) {
+            printf("Too High!\n");
+            high = guess - 1;
+        } else {
+            printf("CORRECT! Target %d found in %d attempts.\n", target, attempts);
+        }
+    } while (guess != target && low <= high);
+}
+
+void compute_random_stats(int sample_size, int min, int max) {
+    if (sample_size <= 0) return;
+    printf("Computing statistics for %d random numbers in [%d, %d]...\n", sample_size, min, max);
+    
+    long long sum = 0;
+    int min_val = max;
+    int max_val = min;
+    
+    int *samples = malloc(sizeof(int) * sample_size);
+    if (!samples) return;
+
+    for (int i = 0; i < sample_size; i++) {
+        int val = get_random_int(min, max);
+        samples[i] = val;
+        sum += val;
+        if (val < min_val) min_val = val;
+        if (val > max_val) max_val = val;
+    }
+
+    double mean = (double)sum / sample_size;
+    double var_sum = 0.0;
+    for (int i = 0; i < sample_size; i++) {
+        double diff = samples[i] - mean;
+        var_sum += diff * diff;
+    }
+    double variance = var_sum / sample_size;
+    double stddev = sqrt(variance);
+    double expected_mean = (min + max) / 2.0;
+
+    printf("  Min: %d, Max: %d\n", min_val, max_val);
+    printf("  Sample Mean: %.2f (Expected: %.2f)\n", mean, expected_mean);
+    printf("  Variance: %.2f, StdDev: %.2f\n", variance, stddev);
+
+    free(samples);
+}
+
 int main(void) {
     init_random();
-    printf("=== Random Generator Toolkit (v1.2) ===\n\n");
+    printf("=== Random Generator Toolkit (v1.3) ===\n\n");
     
     printf("--- Random Integers ---\n");
     for (int i = 0; i < 5; i++) {
@@ -139,7 +200,14 @@ int main(void) {
     fill_random_matrix(3, 4, (int *)mat, 1, 99);
     print_matrix(3, 4, (const int *)mat);
 
+    printf("\n--- Automated Number Guessing Game ---\n");
+    simulate_guessing_game(1, 100);
+
+    printf("\n--- Statistical Distribution Analysis ---\n");
+    compute_random_stats(10000, 1, 100);
+
     return 0;
 }
+
 
 

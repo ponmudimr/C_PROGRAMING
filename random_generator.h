@@ -30,6 +30,13 @@ void fill_random_matrix(int rows, int cols, int *matrix, int min, int max);
 /* Print a matrix with clean visual formatting */
 void print_matrix(int rows, int cols, const int *matrix);
 
+/* Simulate an interactive/automated number guessing game */
+void simulate_guessing_game(int min, int max);
+
+/* Compute statistical properties (min, max, mean, variance) for random samples */
+void compute_random_stats(int sample_size, int min, int max);
+
 #endif /* RANDOM_GENERATOR_H */
+
 
 
