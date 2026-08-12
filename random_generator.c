@@ -66,9 +66,39 @@ void generate_hex_token(char *buffer, size_t length) {
     buffer[length - 1] = '\0';
 }
 
+void shuffle_array(int *arr, size_t size) {
+    if (!arr || size <= 1) return;
+    for (size_t i = size - 1; i > 0; i--) {
+        size_t j = (size_t)get_random_int(0, (int)i);
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
+void fill_random_matrix(int rows, int cols, int *matrix, int min, int max) {
+    if (!matrix || rows <= 0 || cols <= 0) return;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            matrix[i * cols + j] = get_random_int(min, max);
+        }
+    }
+}
+
+void print_matrix(int rows, int cols, const int *matrix) {
+    if (!matrix || rows <= 0 || cols <= 0) return;
+    for (int i = 0; i < rows; i++) {
+        printf("  [ ");
+        for (int j = 0; j < cols; j++) {
+            printf("%4d ", matrix[i * cols + j]);
+        }
+        printf("]\n");
+    }
+}
+
 int main(void) {
     init_random();
-    printf("=== Random Generator Toolkit (v1.1) ===\n\n");
+    printf("=== Random Generator Toolkit (v1.2) ===\n\n");
     
     printf("--- Random Integers ---\n");
     for (int i = 0; i < 5; i++) {
@@ -93,6 +123,23 @@ int main(void) {
     generate_hex_token(token, sizeof(token));
     printf("Generated Hex Token (32 chars): %s\n", token);
 
+    printf("\n--- Fisher-Yates Array Shuffle ---\n");
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    size_t arr_size = sizeof(arr) / sizeof(arr[0]);
+    printf("Original array: ");
+    for (size_t i = 0; i < arr_size; i++) printf("%d ", arr[i]);
+    printf("\n");
+    shuffle_array(arr, arr_size);
+    printf("Shuffled array: ");
+    for (size_t i = 0; i < arr_size; i++) printf("%d ", arr[i]);
+    printf("\n");
+
+    printf("\n--- Random Matrix Generation (3x4) ---\n");
+    int mat[3][4];
+    fill_random_matrix(3, 4, (int *)mat, 1, 99);
+    print_matrix(3, 4, (const int *)mat);
+
     return 0;
 }
+
 

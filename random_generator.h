@@ -21,5 +21,15 @@ void generate_random_password(char *buffer, size_t length, int include_symbols);
 /* Generate a random hexadecimal token string of specified length */
 void generate_hex_token(char *buffer, size_t length);
 
+/* Shuffle an array of integers in-place using Fisher-Yates algorithm */
+void shuffle_array(int *arr, size_t size);
+
+/* Fill a 2D array / matrix with random integers */
+void fill_random_matrix(int rows, int cols, int *matrix, int min, int max);
+
+/* Print a matrix with clean visual formatting */
+void print_matrix(int rows, int cols, const int *matrix);
+
 #endif /* RANDOM_GENERATOR_H */
+
 
