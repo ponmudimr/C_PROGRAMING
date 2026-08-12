@@ -15,4 +15,11 @@ double get_random_double(double min, double max);
 /* Roll n dice with the specified number of sides, returns sum */
 int roll_dice(int count, int sides);
 
+/* Generate a random password string of specified length into buffer */
+void generate_random_password(char *buffer, size_t length, int include_symbols);
+
+/* Generate a random hexadecimal token string of specified length */
+void generate_hex_token(char *buffer, size_t length);
+
 #endif /* RANDOM_GENERATOR_H */
+
