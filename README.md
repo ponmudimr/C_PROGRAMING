@@ -19,6 +19,9 @@ A collection of C programs written while learning and practicing C.
 | `test_vector.c` | **Test Suite**: Dynamic resizing array / vector structure (`vector.c/h`) |
 | `test_linked_list.c` | **Test Suite**: Singly linked list operations & in-place reversal (`linked_list.c/h`) |
 | `test_sort_search.c` | **Test Suite**: Quick Sort, Merge Sort, Binary Search & verification (`sort_search.c/h`) |
+| `test_stack.c` | **Test Suite**: Dynamic Stack LIFO data structure (`stack.c/h`) |
+| `test_queue.c` | **Test Suite**: Circular Queue FIFO data structure (`queue.c/h`) |
+| `test_bst.c` | **Test Suite**: Binary Search Tree structure and operations (`bst.c/h`) |
 
 ## How to compile and run
 
