@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-TARGETS = test_string_utils test_matrix_ops random_generator test_vector test_linked_list test_sort_search test_stack test_queue test_bst
+TARGETS = test_string_utils test_matrix_ops random_generator test_vector test_linked_list test_sort_search test_stack test_queue test_bst test_heap test_hash_table
 
 all: $(TARGETS)
 
@@ -32,6 +32,12 @@ test_queue: queue.c test_queue.c
 test_bst: bst.c test_bst.c
 	$(CC) $(CFLAGS) bst.c test_bst.c -o test_bst
 
+test_heap: heap.c test_heap.c
+	$(CC) $(CFLAGS) heap.c test_heap.c -o test_heap
+
+test_hash_table: hash_table.c test_hash_table.c
+	$(CC) $(CFLAGS) hash_table.c test_hash_table.c -o test_hash_table
+
 test: all
 	@echo "Running all test programs..."
 	./test_string_utils
@@ -43,6 +49,8 @@ test: all
 	./test_stack
 	./test_queue
 	./test_bst
+	./test_heap
+	./test_hash_table
 
 clean:
 	rm -f $(TARGETS) *.o
