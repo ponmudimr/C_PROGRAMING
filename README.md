@@ -13,6 +13,8 @@ A collection of C programs written while learning and practicing C.
 | `hostel_booking.c` | Hostel 2 room booking system for 1st year students |
 | `triangle_pattern.c` | Star triangle patterns (right-angled, pyramid, inverted, hollow, diamond) |
 | `calculator.c` | Interactive calculator (+, -, *, /, %) with input validation |
+| `electricity_calculator.c` | **CLI App**: Interactive electricity charge calculator for Domestic, Commercial, Industrial, Agricultural categories |
+| `test_electricity_charge.c` | **Test Suite**: Multi-tier slab rate, tax, fuel surcharge, and prompt discount unit tests (`electricity_charge.c/h`) |
 | `test_string_utils.c` | **Test Suite**: String manipulation unit tests (`string_utils.c/h`) |
 | `test_matrix_ops.c` | **Test Suite**: Matrix and array operations unit tests (`matrix_ops.c/h`) |
 | `random_generator.c` | **Toolkit**: Random numbers, dice roller, password/token generator, and stats |
@@ -29,8 +31,8 @@ A collection of C programs written while learning and practicing C.
 
 ### Individual Programs
 ```bash
-gcc triangle_pattern.c -o triangle_pattern
-./triangle_pattern
+gcc electricity_charge.c electricity_calculator.c -o electricity_calculator -lm
+./electricity_calculator
 ```
 
 ### Running Test Programs
