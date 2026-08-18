@@ -64,8 +64,57 @@ TariffConfig get_default_tariff(ConsumerType type) {
     return config;
 }
 
+int create_custom_tariff(TariffConfig *config, ConsumerType type, double fixed_charge) {
+    if (config == NULL || fixed_charge < 0) {
+        return -1;
+    }
+    memset(config, 0, sizeof(TariffConfig));
+    config->type = type;
+    config->fixed_charge = fixed_charge;
+    config->num_slabs = 0;
+    return 0;
+}
+
+int add_tariff_slab(TariffConfig *config, double min_units, double max_units, double rate_per_unit) {
+    if (config == NULL || config->num_slabs >= MAX_SLABS || min_units < 0 || rate_per_unit < 0) {
+        return -1;
+    }
+    if (max_units != -1 && max_units <= min_units) {
+        return -1;
+    }
+
+    int idx = config->num_slabs;
+    config->slabs[idx].min_units = min_units;
+    config->slabs[idx].max_units = max_units;
+    config->slabs[idx].rate_per_unit = rate_per_unit;
+    config->num_slabs++;
+    return 0;
+}
+
+int validate_tariff_config(const TariffConfig *config) {
+    if (config == NULL || config->num_slabs <= 0 || config->num_slabs > MAX_SLABS || config->fixed_charge < 0) {
+        return 0;
+    }
+
+    for (int i = 0; i < config->num_slabs; i++) {
+        if (config->slabs[i].rate_per_unit < 0 || config->slabs[i].min_units < 0) {
+            return 0;
+        }
+        if (config->slabs[i].max_units != -1 && config->slabs[i].max_units <= config->slabs[i].min_units) {
+            return 0;
+        }
+        if (i > 0) {
+            if (config->slabs[i].min_units != config->slabs[i - 1].max_units) {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
 int calculate_electricity_bill_custom(double units, const TariffConfig *config, ElectricityBill *bill) {
-    if (units < 0 || bill == NULL || config == NULL || config->num_slabs <= 0) {
+    if (units < 0 || bill == NULL || config == NULL || !validate_tariff_config(config)) {
         return -1;
     }
 
@@ -115,7 +164,7 @@ int calculate_electricity_bill_custom(double units, const TariffConfig *config, 
 
 int calculate_electricity_bill(double units, ConsumerType type, ElectricityBill *bill) {
     TariffConfig default_config = get_default_tariff(type);
-    if (default_config.num_slabs == 0) {
+    if (!validate_tariff_config(&default_config)) {
         return -1;
     }
     return calculate_electricity_bill_custom(units, &default_config, bill);

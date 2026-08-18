@@ -78,6 +78,23 @@ void print_electricity_bill(const ElectricityBill *bill);
  */
 const char* get_consumer_type_name(ConsumerType type);
 
+/**
+ * Create a new empty custom tariff structure.
+ */
+int create_custom_tariff(TariffConfig *config, ConsumerType type, double fixed_charge);
+
+/**
+ * Add a tariff slab to a custom tariff configuration.
+ * Returns 0 on success, -1 if maximum slabs reached or invalid parameters.
+ */
+int add_tariff_slab(TariffConfig *config, double min_units, double max_units, double rate_per_unit);
+
+/**
+ * Validate consistency and validity of a tariff configuration.
+ * Returns 1 if valid, 0 if invalid.
+ */
+int validate_tariff_config(const TariffConfig *config);
+
 #ifdef __cplusplus
 }
 #endif
