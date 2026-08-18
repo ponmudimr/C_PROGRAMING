@@ -103,5 +103,60 @@ int calculate_electricity_bill_custom(double units, const TariffConfig *config, 
     bill->num_slabs = active_slabs;
     bill->energy_charge = total_energy_charge;
 
+    bill->gross_amount = bill->energy_charge + bill->fixed_charge;
+    bill->fuel_surcharge = bill->units * FUEL_SURCHARGE_PER_UNIT;
+    bill->tax_amount = (bill->gross_amount + bill->fuel_surcharge) * TAX_RATE;
+    bill->total_amount = bill->gross_amount + bill->fuel_surcharge + bill->tax_amount;
+    bill->prompt_discount = bill->total_amount * PROMPT_PAYMENT_DISCOUNT;
+    bill->net_payable = bill->total_amount - bill->prompt_discount;
+
     return 0;
+}
+
+int calculate_electricity_bill(double units, ConsumerType type, ElectricityBill *bill) {
+    TariffConfig default_config = get_default_tariff(type);
+    if (default_config.num_slabs == 0) {
+        return -1;
+    }
+    return calculate_electricity_bill_custom(units, &default_config, bill);
+}
+
+void print_electricity_bill(const ElectricityBill *bill) {
+    if (bill == NULL) {
+        printf("Error: Invalid bill data.\n");
+        return;
+    }
+
+    printf("\n========================================================\n");
+    printf("              ELECTRICITY UTILITY INVOICE               \n");
+    printf("========================================================\n");
+    printf(" Category        : %s\n", get_consumer_type_name(bill->type));
+    printf(" Total Usage     : %.2f kWh\n", bill->units);
+    printf("--------------------------------------------------------\n");
+    printf(" Energy Charges Breakdown:\n");
+
+    if (bill->num_slabs == 0) {
+        printf("   (No consumption charges)\n");
+    } else {
+        for (int i = 0; i < bill->num_slabs; i++) {
+            printf("   Slab %d: %8.2f kWh @ $%5.2f/kWh  =  $%8.2f\n",
+                   i + 1,
+                   bill->slabs[i].slab_units,
+                   bill->slabs[i].rate,
+                   bill->slabs[i].amount);
+        }
+    }
+
+    printf("--------------------------------------------------------\n");
+    printf(" Total Energy Charge             : $%8.2f\n", bill->energy_charge);
+    printf(" Fixed Monthly Charge            : $%8.2f\n", bill->fixed_charge);
+    printf(" Gross Energy Amount             : $%8.2f\n", bill->gross_amount);
+    printf(" Fuel Adjustment Surcharge (FAC) : $%8.2f\n", bill->fuel_surcharge);
+    printf(" Electricity Tax (%.0f%%)          : $%8.2f\n", TAX_RATE * 100.0, bill->tax_amount);
+    printf("--------------------------------------------------------\n");
+    printf(" TOTAL AMOUNT DUE                : $%8.2f\n", bill->total_amount);
+    printf(" Prompt Payment Discount (%.0f%%)   : -$%7.2f\n", PROMPT_PAYMENT_DISCOUNT * 100.0, bill->prompt_discount);
+    printf("--------------------------------------------------------\n");
+    printf(" NET AMOUNT PAYABLE ON TIME      : $%8.2f\n", bill->net_payable);
+    printf("========================================================\n\n");
 }
