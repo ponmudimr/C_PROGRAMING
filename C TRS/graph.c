@@ -81,3 +81,58 @@ void graph_print(const Graph* graph) {
         printf("\n");
     }
 }
+
+void graph_bfs(const Graph* graph, int start_vertex, int* visit_order, int* visited_count) {
+    if (!graph || !visit_order || !visited_count || start_vertex < 0 || start_vertex >= graph->num_vertices) {
+        if (visited_count) *visited_count = 0;
+        return;
+    }
+
+    bool visited[GRAPH_MAX_VERTICES] = { false };
+    int queue[GRAPH_MAX_VERTICES];
+    int front = 0, rear = 0;
+
+    visited[start_vertex] = true;
+    queue[rear++] = start_vertex;
+    *visited_count = 0;
+
+    while (front < rear) {
+        int current = queue[front++];
+        visit_order[(*visited_count)++] = current;
+
+        AdjListNode* temp = graph->array[current].head;
+        while (temp) {
+            int adj = temp->dest;
+            if (!visited[adj]) {
+                visited[adj] = true;
+                queue[rear++] = adj;
+            }
+            temp = temp->next;
+        }
+    }
+}
+
+static void dfs_helper(const Graph* graph, int v, bool visited[], int* visit_order, int* visited_count) {
+    visited[v] = true;
+    visit_order[(*visited_count)++] = v;
+
+    AdjListNode* temp = graph->array[v].head;
+    while (temp) {
+        int adj = temp->dest;
+        if (!visited[adj]) {
+            dfs_helper(graph, adj, visited, visit_order, visited_count);
+        }
+        temp = temp->next;
+    }
+}
+
+void graph_dfs(const Graph* graph, int start_vertex, int* visit_order, int* visited_count) {
+    if (!graph || !visit_order || !visited_count || start_vertex < 0 || start_vertex >= graph->num_vertices) {
+        if (visited_count) *visited_count = 0;
+        return;
+    }
+
+    bool visited[GRAPH_MAX_VERTICES] = { false };
+    *visited_count = 0;
+    dfs_helper(graph, start_vertex, visited, visit_order, visited_count);
+}

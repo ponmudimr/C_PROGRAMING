@@ -36,4 +36,8 @@ void graph_free(Graph* graph);
 bool graph_add_edge(Graph* graph, int src, int dest, int weight);
 void graph_print(const Graph* graph);
 
+/* Graph Traversal Operations */
+void graph_bfs(const Graph* graph, int start_vertex, int* visit_order, int* visited_count);
+void graph_dfs(const Graph* graph, int start_vertex, int* visit_order, int* visited_count);
+
 #endif /* GRAPH_H */
