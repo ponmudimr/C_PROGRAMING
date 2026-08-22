@@ -136,3 +136,144 @@ void graph_dfs(const Graph* graph, int start_vertex, int* visit_order, int* visi
     *visited_count = 0;
     dfs_helper(graph, start_vertex, visited, visit_order, visited_count);
 }
+
+static int min_distance(const int dist[], const bool spt_set[], int num_vertices) {
+    int min = GRAPH_INF;
+    int min_index = -1;
+
+    for (int v = 0; v < num_vertices; v++) {
+        if (!spt_set[v] && dist[v] <= min) {
+            min = dist[v];
+            min_index = v;
+        }
+    }
+    return min_index;
+}
+
+PathResult graph_dijkstra(const Graph* graph, int start_vertex, int target_vertex) {
+    PathResult res;
+    res.distance = GRAPH_INF;
+    res.path_length = 0;
+    res.found = false;
+
+    if (!graph || start_vertex < 0 || start_vertex >= graph->num_vertices ||
+        target_vertex < 0 || target_vertex >= graph->num_vertices) {
+        return res;
+    }
+
+    int dist[GRAPH_MAX_VERTICES];
+    bool spt_set[GRAPH_MAX_VERTICES];
+    int parent[GRAPH_MAX_VERTICES];
+
+    for (int i = 0; i < graph->num_vertices; i++) {
+        dist[i] = GRAPH_INF;
+        spt_set[i] = false;
+        parent[i] = -1;
+    }
+
+    dist[start_vertex] = 0;
+
+    for (int count = 0; count < graph->num_vertices - 1; count++) {
+        int u = min_distance(dist, spt_set, graph->num_vertices);
+        if (u == -1 || dist[u] == GRAPH_INF) break;
+
+        spt_set[u] = true;
+
+        AdjListNode* temp = graph->array[u].head;
+        while (temp) {
+            int v = temp->dest;
+            int weight = temp->weight;
+
+            if (!spt_set[v] && dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                parent[v] = u;
+            }
+            temp = temp->next;
+        }
+    }
+
+    if (dist[target_vertex] != GRAPH_INF) {
+        res.distance = dist[target_vertex];
+        res.found = true;
+
+        int temp_path[GRAPH_MAX_VERTICES];
+        int count = 0;
+        int curr = target_vertex;
+        while (curr != -1) {
+            temp_path[count++] = curr;
+            curr = parent[curr];
+        }
+
+        res.path_length = count;
+        for (int i = 0; i < count; i++) {
+            res.path[i] = temp_path[count - 1 - i];
+        }
+    }
+
+    return res;
+}
+
+static bool is_cyclic_directed_util(const Graph* graph, int v, bool visited[], bool rec_stack[]) {
+    if (!visited[v]) {
+        visited[v] = true;
+        rec_stack[v] = true;
+
+        AdjListNode* temp = graph->array[v].head;
+        while (temp) {
+            int adj = temp->dest;
+            if (!visited[adj] && is_cyclic_directed_util(graph, adj, visited, rec_stack)) {
+                return true;
+            } else if (rec_stack[adj]) {
+                return true;
+            }
+            temp = temp->next;
+        }
+    }
+    rec_stack[v] = false;
+    return false;
+}
+
+static bool is_cyclic_undirected_util(const Graph* graph, int v, bool visited[], int parent) {
+    visited[v] = true;
+
+    AdjListNode* temp = graph->array[v].head;
+    while (temp) {
+        int adj = temp->dest;
+        if (!visited[adj]) {
+            if (is_cyclic_undirected_util(graph, adj, visited, v)) {
+                return true;
+            }
+        } else if (adj != parent) {
+            return true;
+        }
+        temp = temp->next;
+    }
+    return false;
+}
+
+bool graph_has_cycle(const Graph* graph) {
+    if (!graph) return false;
+
+    bool visited[GRAPH_MAX_VERTICES] = { false };
+
+    if (graph->is_directed) {
+        bool rec_stack[GRAPH_MAX_VERTICES] = { false };
+        for (int i = 0; i < graph->num_vertices; i++) {
+            if (!visited[i]) {
+                if (is_cyclic_directed_util(graph, i, visited, rec_stack)) {
+                    return true;
+                }
+            }
+        }
+    } else {
+        for (int i = 0; i < graph->num_vertices; i++) {
+            if (!visited[i]) {
+                if (is_cyclic_undirected_util(graph, i, visited, -1)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}

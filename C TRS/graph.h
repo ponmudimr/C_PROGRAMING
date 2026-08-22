@@ -40,4 +40,8 @@ void graph_print(const Graph* graph);
 void graph_bfs(const Graph* graph, int start_vertex, int* visit_order, int* visited_count);
 void graph_dfs(const Graph* graph, int start_vertex, int* visit_order, int* visited_count);
 
+/* Advanced Graph Algorithms */
+PathResult graph_dijkstra(const Graph* graph, int start_vertex, int target_vertex);
+bool graph_has_cycle(const Graph* graph);
+
 #endif /* GRAPH_H */
