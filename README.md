@@ -26,6 +26,7 @@ A collection of C programs written while learning and practicing C.
 | `test_bst.c` | **Test Suite**: Binary Search Tree structure and operations (`bst.c/h`) |
 | `test_heap.c` | **Test Suite**: Min-Heap Priority Queue structure and operations (`heap.c/h`) |
 | `test_hash_table.c` | **Test Suite**: Hash Table key-value store (`hash_table.c/h`) |
+| `test_graph.c` | **Test Suite**: Graph adjacency list, BFS/DFS, Dijkstra shortest path & cycle detection (`graph.c/h`) |
 
 ## How to compile and run
 

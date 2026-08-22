@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-TARGETS = test_string_utils test_matrix_ops random_generator test_vector test_linked_list test_sort_search test_stack test_queue test_bst test_heap test_hash_table test_electricity_charge electricity_calculator
+TARGETS = test_string_utils test_matrix_ops random_generator test_vector test_linked_list test_sort_search test_stack test_queue test_bst test_heap test_hash_table test_graph test_electricity_charge electricity_calculator
 
 all: $(TARGETS)
 
@@ -38,6 +38,9 @@ test_heap: heap.c test_heap.c
 test_hash_table: hash_table.c test_hash_table.c
 	$(CC) $(CFLAGS) hash_table.c test_hash_table.c -o test_hash_table
 
+test_graph: graph.c test_graph.c graph.h
+	$(CC) $(CFLAGS) graph.c test_graph.c -o test_graph
+
 test_electricity_charge: electricity_charge.c test_electricity_charge.c electricity_charge.h
 	$(CC) $(CFLAGS) electricity_charge.c test_electricity_charge.c -o test_electricity_charge -lm
 
@@ -57,6 +60,7 @@ test: all
 	./test_bst
 	./test_heap
 	./test_hash_table
+	./test_graph
 	./test_electricity_charge
 
 clean:
