@@ -58,6 +58,50 @@ static AVLNode *rotate_left(AVLNode *x) {
     return y;
 }
 
+static AVLNode *insert_node(AVLNode *node, int key, bool *inserted) {
+    if (!node) {
+        *inserted = true;
+        return create_avl_node(key);
+    }
+
+    if (key < node->key) {
+        node->left = insert_node(node->left, key, inserted);
+    } else if (key > node->key) {
+        node->right = insert_node(node->right, key, inserted);
+    } else {
+        *inserted = false; /* Duplicate key */
+        return node;
+    }
+
+    node->height = 1 + max_int(get_height(node->left), get_height(node->right));
+
+    int balance = get_balance(node);
+
+    /* Left Left Case */
+    if (balance > 1 && key < node->left->key) {
+        return rotate_right(node);
+    }
+
+    /* Right Right Case */
+    if (balance < -1 && key > node->right->key) {
+        return rotate_left(node);
+    }
+
+    /* Left Right Case */
+    if (balance > 1 && key > node->left->key) {
+        node->left = rotate_left(node->left);
+        return rotate_right(node);
+    }
+
+    /* Right Left Case */
+    if (balance < -1 && key < node->right->key) {
+        node->right = rotate_right(node->right);
+        return rotate_left(node);
+    }
+
+    return node;
+}
+
 AVLTree *avl_create(void) {
     AVLTree *tree = (AVLTree *)malloc(sizeof(AVLTree));
     if (!tree) return NULL;
@@ -70,6 +114,16 @@ void avl_destroy(AVLTree *tree) {
     if (!tree) return;
     free_avl_nodes(tree->root);
     free(tree);
+}
+
+bool avl_insert(AVLTree *tree, int key) {
+    if (!tree) return false;
+    bool inserted = false;
+    tree->root = insert_node(tree->root, key, &inserted);
+    if (inserted) {
+        tree->size++;
+    }
+    return inserted;
 }
 
 bool avl_search(const AVLTree *tree, int key) {
@@ -121,12 +175,7 @@ bool avl_max(const AVLTree *tree, int *out_max) {
     return true;
 }
 
-/* Stubs to be implemented in subsequent commits */
-bool avl_insert(AVLTree *tree, int key) {
-    (void)tree; (void)key;
-    return false;
-}
-
+/* Stubs for deletion, traversals, and balance checking */
 bool avl_remove(AVLTree *tree, int key) {
     (void)tree; (void)key;
     return false;
