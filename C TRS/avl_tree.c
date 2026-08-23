@@ -102,6 +102,70 @@ static AVLNode *insert_node(AVLNode *node, int key, bool *inserted) {
     return node;
 }
 
+static AVLNode *find_min_node(AVLNode *node) {
+    while (node && node->left) {
+        node = node->left;
+    }
+    return node;
+}
+
+static AVLNode *remove_node(AVLNode *node, int key, bool *removed) {
+    if (!node) return NULL;
+
+    if (key < node->key) {
+        node->left = remove_node(node->left, key, removed);
+    } else if (key > node->key) {
+        node->right = remove_node(node->right, key, removed);
+    } else {
+        *removed = true;
+        if (!node->left || !node->right) {
+            AVLNode *temp = node->left ? node->left : node->right;
+            if (!temp) {
+                temp = node;
+                node = NULL;
+            } else {
+                *node = *temp;
+            }
+            free(temp);
+        } else {
+            AVLNode *successor = find_min_node(node->right);
+            node->key = successor->key;
+            bool dummy = false;
+            node->right = remove_node(node->right, successor->key, &dummy);
+        }
+    }
+
+    if (!node) return NULL;
+
+    node->height = 1 + max_int(get_height(node->left), get_height(node->right));
+
+    int balance = get_balance(node);
+
+    /* Left Left Case */
+    if (balance > 1 && get_balance(node->left) >= 0) {
+        return rotate_right(node);
+    }
+
+    /* Left Right Case */
+    if (balance > 1 && get_balance(node->left) < 0) {
+        node->left = rotate_left(node->left);
+        return rotate_right(node);
+    }
+
+    /* Right Right Case */
+    if (balance < -1 && get_balance(node->right) <= 0) {
+        return rotate_left(node);
+    }
+
+    /* Right Left Case */
+    if (balance < -1 && get_balance(node->right) > 0) {
+        node->right = rotate_right(node->right);
+        return rotate_left(node);
+    }
+
+    return node;
+}
+
 AVLTree *avl_create(void) {
     AVLTree *tree = (AVLTree *)malloc(sizeof(AVLTree));
     if (!tree) return NULL;
@@ -124,6 +188,16 @@ bool avl_insert(AVLTree *tree, int key) {
         tree->size++;
     }
     return inserted;
+}
+
+bool avl_remove(AVLTree *tree, int key) {
+    if (!tree || !tree->root) return false;
+    bool removed = false;
+    tree->root = remove_node(tree->root, key, &removed);
+    if (removed) {
+        tree->size--;
+    }
+    return removed;
 }
 
 bool avl_search(const AVLTree *tree, int key) {
@@ -155,6 +229,27 @@ int avl_height(const AVLTree *tree) {
     return get_height(tree->root);
 }
 
+static bool check_node_balanced(const AVLNode *node) {
+    if (!node) return true;
+
+    int balance = get_balance(node);
+    if (balance < -1 || balance > 1) {
+        return false;
+    }
+
+    int expected_height = 1 + max_int(get_height(node->left), get_height(node->right));
+    if (node->height != expected_height) {
+        return false;
+    }
+
+    return check_node_balanced(node->left) && check_node_balanced(node->right);
+}
+
+bool avl_is_balanced(const AVLTree *tree) {
+    if (!tree) return true;
+    return check_node_balanced(tree->root);
+}
+
 bool avl_min(const AVLTree *tree, int *out_min) {
     if (!tree || !tree->root || !out_min) return false;
     const AVLNode *curr = tree->root;
@@ -175,25 +270,38 @@ bool avl_max(const AVLTree *tree, int *out_max) {
     return true;
 }
 
-/* Stubs for deletion, traversals, and balance checking */
-bool avl_remove(AVLTree *tree, int key) {
-    (void)tree; (void)key;
-    return false;
-}
-
-bool avl_is_balanced(const AVLTree *tree) {
-    (void)tree;
-    return true;
+static void inorder_recursive(const AVLNode *node, void (*visit)(int key)) {
+    if (!node) return;
+    inorder_recursive(node->left, visit);
+    visit(node->key);
+    inorder_recursive(node->right, visit);
 }
 
 void avl_inorder(const AVLTree *tree, void (*visit)(int key)) {
-    (void)tree; (void)visit;
+    if (!tree || !visit) return;
+    inorder_recursive(tree->root, visit);
+}
+
+static void preorder_recursive(const AVLNode *node, void (*visit)(int key)) {
+    if (!node) return;
+    visit(node->key);
+    preorder_recursive(node->left, visit);
+    preorder_recursive(node->right, visit);
 }
 
 void avl_preorder(const AVLTree *tree, void (*visit)(int key)) {
-    (void)tree; (void)visit;
+    if (!tree || !visit) return;
+    preorder_recursive(tree->root, visit);
+}
+
+static void postorder_recursive(const AVLNode *node, void (*visit)(int key)) {
+    if (!node) return;
+    postorder_recursive(node->left, visit);
+    postorder_recursive(node->right, visit);
+    visit(node->key);
 }
 
 void avl_postorder(const AVLTree *tree, void (*visit)(int key)) {
-    (void)tree; (void)visit;
+    if (!tree || !visit) return;
+    postorder_recursive(tree->root, visit);
 }
