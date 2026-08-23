@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-TARGETS = test_string_utils test_matrix_ops random_generator test_vector test_linked_list test_sort_search test_stack test_queue test_bst test_heap test_hash_table test_graph test_electricity_charge electricity_calculator
+TARGETS = test_string_utils test_matrix_ops random_generator test_vector test_linked_list test_sort_search test_stack test_queue test_bst test_heap test_hash_table test_graph test_avl_tree test_electricity_charge electricity_calculator
 
 all: $(TARGETS)
 
@@ -41,6 +41,9 @@ test_hash_table: hash_table.c test_hash_table.c
 test_graph: graph.c test_graph.c graph.h
 	$(CC) $(CFLAGS) graph.c test_graph.c -o test_graph
 
+test_avl_tree: avl_tree.c test_avl_tree.c avl_tree.h
+	$(CC) $(CFLAGS) avl_tree.c test_avl_tree.c -o test_avl_tree
+
 test_electricity_charge: electricity_charge.c test_electricity_charge.c electricity_charge.h
 	$(CC) $(CFLAGS) electricity_charge.c test_electricity_charge.c -o test_electricity_charge -lm
 
@@ -61,6 +64,7 @@ test: all
 	./test_heap
 	./test_hash_table
 	./test_graph
+	./test_avl_tree
 	./test_electricity_charge
 
 clean:
