@@ -28,6 +28,7 @@ A collection of C programs written while learning and practicing C.
 | `test_hash_table.c` | **Test Suite**: Hash Table key-value store (`hash_table.c/h`) |
 | `test_graph.c` | **Test Suite**: Graph adjacency list, BFS/DFS, Dijkstra shortest path & cycle detection (`graph.c/h`) |
 | `test_avl_tree.c` | **Test Suite**: AVL Self-Balancing Binary Search Tree, rotations, search, deletion & balance invariant (`avl_tree.c/h`) |
+| `test_trie.c` | **Test Suite**: Trie Prefix Tree, word insertion, search, deletion, autocomplete & LCP (`trie.c/h`) |
 
 ## How to compile and run
 
