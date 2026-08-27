@@ -29,6 +29,7 @@ A collection of C programs written while learning and practicing C.
 | `test_graph.c` | **Test Suite**: Graph adjacency list, BFS/DFS, Dijkstra shortest path & cycle detection (`graph.c/h`) |
 | `test_avl_tree.c` | **Test Suite**: AVL Self-Balancing Binary Search Tree, rotations, search, deletion & balance invariant (`avl_tree.c/h`) |
 | `test_trie.c` | **Test Suite**: Trie Prefix Tree, word insertion, search, deletion, autocomplete & LCP (`trie.c/h`) |
+| `test_segment_tree.c` | **Test Suite**: Segment Tree range sum/min/max queries, point update & lazy propagation (`segment_tree.c/h`) |
 
 ## How to compile and run
 
