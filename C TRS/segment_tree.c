@@ -134,6 +134,32 @@ static void update_point_recursive(SegmentTree *tree, size_t node, size_t start,
     tree->tree_max[node] = (tree->tree_max[left_child] > tree->tree_max[right_child]) ? tree->tree_max[left_child] : tree->tree_max[right_child];
 }
 
+static void update_range_recursive(SegmentTree *tree, size_t node, size_t start, size_t end, size_t ql, size_t qr, int add_val) {
+    push_down(tree, node, start, end);
+    if (ql <= start && end <= qr) {
+        tree->lazy[node] += add_val;
+        tree->has_lazy[node] = true;
+        tree->tree_sum[node] += add_val * (int)(end - start + 1);
+        tree->tree_min[node] += add_val;
+        tree->tree_max[node] += add_val;
+        return;
+    }
+    size_t mid = start + (end - start) / 2;
+    size_t left_child = 2 * node + 1;
+    size_t right_child = 2 * node + 2;
+
+    if (ql <= mid) {
+        update_range_recursive(tree, left_child, start, mid, ql, qr, add_val);
+    }
+    if (qr > mid) {
+        update_range_recursive(tree, right_child, mid + 1, end, ql, qr, add_val);
+    }
+
+    tree->tree_sum[node] = tree->tree_sum[left_child] + tree->tree_sum[right_child];
+    tree->tree_min[node] = (tree->tree_min[left_child] < tree->tree_min[right_child]) ? tree->tree_min[left_child] : tree->tree_min[right_child];
+    tree->tree_max[node] = (tree->tree_max[left_child] > tree->tree_max[right_child]) ? tree->tree_max[left_child] : tree->tree_max[right_child];
+}
+
 SegmentTree* segment_tree_create(const int *arr, size_t n) {
     if (n == 0) {
         return NULL;
@@ -211,5 +237,13 @@ bool segment_tree_update_point(SegmentTree *tree, size_t index, int val) {
         return false;
     }
     update_point_recursive(tree, 0, 0, tree->n - 1, index, val);
+    return true;
+}
+
+bool segment_tree_update_range(SegmentTree *tree, size_t left, size_t right, int add_val) {
+    if (!tree || left > right || right >= tree->n) {
+        return false;
+    }
+    update_range_recursive(tree, 0, 0, tree->n - 1, left, right, add_val);
     return true;
 }
